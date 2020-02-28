@@ -1,5 +1,5 @@
 // dependencies
-import express, { Express } from 'express';
+import express, { Express, Response, NextFunction, Request } from 'express';
 import { resolve } from 'path';
 
 // Env variables setup
@@ -13,6 +13,16 @@ const app: Express = express();
 // middlewares
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+
+// cors
+function access(_: Request, res: Response, next: NextFunction): void {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+  res.header('Access-Control-Allow-Headers', 'Content-Type');
+  next();
+}
+
+app.use(access);
 
 // routes
 app.use(api.teachers);
