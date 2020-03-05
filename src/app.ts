@@ -10,10 +10,6 @@ import api from './api';
 
 const app: Express = express();
 
-// middlewares
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-
 // cors
 function access(_: Request, res: Response, next: NextFunction): void {
   res.header('Access-Control-Allow-Origin', '*');
@@ -22,7 +18,10 @@ function access(_: Request, res: Response, next: NextFunction): void {
   next();
 }
 
+// middlewares
 app.use(access);
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 
 // routes
 app.use(api.teachers);

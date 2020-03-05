@@ -2,16 +2,15 @@
 import { Pool } from 'pg';
 import crypto from 'crypto';
 
-// types
-export interface User {
-  name: string;
-  lastname: string;
-  password: string;
-  email: string;
-  is_boss?: boolean;
-  is_program?: boolean;
-  id: number;
-}
+// scripts
+import { Curriculum, User, Studies, TeachingExperiences } from '../types';
+import TEACHER_SQL_QUERIES from './teachers.sql';
+import {
+  getCurriculumInfoForInsertion,
+  getStudyInformationForInsertion,
+  getExperienceInformationForInsertion,
+  getHeadResult,
+} from './teacher.utils';
 
 interface TeacherServiceDependencies {
   database: Pool;
@@ -20,6 +19,7 @@ interface TeacherServiceDependencies {
 interface TeacherService {
   registerUser(incommingUser: User): Promise<User>;
   loginUser(email: string, password: string): Promise<User>;
+  registerTeacherCurriculum(curriculum: Curriculum, user: User): Promise<Curriculum>;
 }
 
 function buildTeacherService(dependencies: TeacherServiceDependencies): TeacherService {
@@ -29,27 +29,51 @@ function buildTeacherService(dependencies: TeacherServiceDependencies): TeacherS
       // Encode user password
       userClone.password = crypto.createHmac('sha256', userClone.password).digest('hex');
       // Insert user in database
-      const user = await dependencies.database.query(
-        `
-          INSERT INTO teachers(name, lastname, password, email) VALUES($1, $2, $3, $4) returning *
-        `,
-        [userClone.name, userClone.lastname, userClone.password, userClone.email],
-      );
+      const user = await dependencies.database.query(TEACHER_SQL_QUERIES.signupTeacher, [
+        userClone.name,
+        userClone.lastname,
+        userClone.password,
+        userClone.email,
+      ]);
 
       return user.rows[0] as User;
     },
     async loginUser(email: string, password: string): Promise<User> {
       const storedPassword = crypto.createHmac('sha256', password).digest('hex');
-      const storedUser = await dependencies.database.query(
-        `SELECT id, name, lastname, email, is_boss, is_program FROM teachers WHERE email=$1 AND password=$2`,
-        [email, storedPassword],
-      );
+      const storedUser = await dependencies.database.query(TEACHER_SQL_QUERIES.loginTeacher, [email, storedPassword]);
 
       if (!storedUser.rows[0]) {
         throw new Error("User doesn't exists");
       }
 
       return storedUser.rows[0] as User;
+    },
+    async registerTeacherCurriculum(curriculum: Curriculum, user: User): Promise<Curriculum> {
+      const storedCurriculum = await dependencies.database.query(
+        TEACHER_SQL_QUERIES.addCurriculum,
+        getCurriculumInfoForInsertion(curriculum, user),
+      );
+
+      const studiesInsertions = curriculum.studies.map(study =>
+        dependencies.database.query(
+          TEACHER_SQL_QUERIES.addTeacherStudies,
+          getStudyInformationForInsertion(study, storedCurriculum.rows[0].id),
+        ),
+      );
+
+      const teachingExperiencesInsertions = curriculum.teaching_experiences.map(experience =>
+        dependencies.database.query(
+          TEACHER_SQL_QUERIES.addTeacherExperience,
+          getExperienceInformationForInsertion(experience, storedCurriculum.rows[0].id),
+        ),
+      );
+
+      const studies: Studies[] = (await Promise.all(studiesInsertions)).map(getHeadResult);
+      const teachingExperiences: TeachingExperiences[] = (await Promise.all(teachingExperiencesInsertions)).map(
+        getHeadResult,
+      );
+
+      return { ...storedCurriculum.rows[0], studies, teachingExperiences } as Curriculum;
     },
   };
 }
