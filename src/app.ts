@@ -25,5 +25,6 @@ app.use(express.urlencoded({ extended: false }));
 
 // routes
 app.use(api.teachers);
+app.use(api.jobs);
 
 export default app;

@@ -1,4 +1,5 @@
 // scripts
 import teachers from './teachers';
+import jobs from './jobs';
 
-export default { teachers };
+export default { teachers, jobs };

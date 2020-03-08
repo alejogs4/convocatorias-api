@@ -1,0 +1,31 @@
+// packages
+import { Router } from 'express';
+
+// scripts
+import jobsController from './jobs.controllers';
+import utils from '../utils';
+
+// constants
+const jobs = Router();
+const { tokenService, validators } = utils;
+
+const jobValidator = validators.validateRequestSchema([
+  'name',
+  'description',
+  'begin_date',
+  'final_date',
+  'profiles',
+  'job_type_id',
+]);
+
+jobs.get('/api/v1/jobs', tokenService.validateToken, jobsController.getJobOpportunities);
+jobs.get('/api/v1/jobs/types', jobsController.getJobsTypes);
+jobs.post(
+  '/api/v1/job',
+  jobValidator,
+  tokenService.validateToken,
+  validators.validateCurrentUserBePartProgram,
+  jobsController.createNewJobOpportunity,
+);
+
+export default jobs;

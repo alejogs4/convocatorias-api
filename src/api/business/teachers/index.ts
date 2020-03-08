@@ -36,4 +36,7 @@ teachers.post(
   teacherControllers.createTeacherCurriculum,
 );
 
+teachers.get('/api/v1/teacher/curriculum', tokenService.validateToken, teacherControllers.getTeacherCurriculum);
+teachers.get('/api/v1/teacher/levels', teacherControllers.getTeacherLevels);
+
 export default teachers;

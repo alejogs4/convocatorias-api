@@ -13,6 +13,25 @@ const TEACHER_SQL_QUERIES = {
   VALUES($1, $2, $3, $4, $5, $6)
   RETURNING *
  `,
+  getCurriculumByUser: `
+ SELECT
+ id, dni, gender, civil_status, country, birthday, hometown, personal_address, home_phone, cellphone_phone
+ FROM curriculum
+ WHERE teacher_id=$1;
+`,
+  getCurriculumStudies: `
+ SELECT
+ id, degree, degree_topic, begin_date, final_date, title_level_id
+ FROM studies
+ WHERE curriculum_id=$1
+`,
+  getTeachingExperiencesByCurriculumID: `
+SELECT
+id, academic_program, subjects, organization, begin_date, final_date
+FROM teaching_experiences
+WHERE curriculum_id=$1
+`,
+  getTeachersLevels: 'SELECT id, text FROM title_levels',
 };
 
 export default TEACHER_SQL_QUERIES;

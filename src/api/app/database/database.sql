@@ -10,15 +10,33 @@ CREATE TABLE teachers(
   CONSTRAINT unq_teacher_email UNIQUE(email)
 );
 
+CREATE TABLE job_types(
+  id serial,
+  text VARCHAR(40) NOT NULL,
+  CONSTRAINT pk_job_types PRIMARY KEY(id)
+);
+
 CREATE TABLE jobs(
   id serial,
-  open_teacher_id int,
-  title VARCHAR(400) NOT NULL,
+  name VARCHAR(400) NOT NULL,
   description text NOT NULL,
-  limit_date DATE NOT NULL,
-  is_open BOOLEAN DEFAULT true,
+  begin_date DATE NOT NULL,
+  final_date DATE NOT NULL,
+  is_close BOOLEAN DEFAULT false,
+  open_teacher_id int,
+  job_type_id int,
   CONSTRAINT pk_jobs PRIMARY KEY(id),
-  CONSTRAINT fk_jobs_teachers FOREIGN KEY(open_teacher_id) REFERENCES teachers(id)
+  CONSTRAINT fk_jobs_teachers FOREIGN KEY(open_teacher_id) REFERENCES teachers(id) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT fk_jobs_job_types FOREIGN KEY(job_type_id) REFERENCES job_types(id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE profiles(
+  id serial,
+  name VARCHAR(400) NOT NULL,
+  description text NOT NULL,
+  job_id int,
+  CONSTRAINT pk_profiles PRIMARY KEY(id),
+  CONSTRAINT fk_profiles_jobs FOREIGN KEY(job_id) REFERENCES jobs(id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE candidates(
@@ -27,8 +45,8 @@ CREATE TABLE candidates(
   job_id int,
   score int NOT NULL,
   CONSTRAINT pk_candidates PRIMARY KEY(id),
-  CONSTRAINT fk_candidates_teachers FOREIGN KEY(teacher_id) REFERENCES teachers(id),
-  CONSTRAINT fk_candidates_jobs FOREIGN KEY(job_id) REFERENCES jobs(id),
+  CONSTRAINT fk_candidates_teachers FOREIGN KEY(teacher_id) REFERENCES teachers(id) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT fk_candidates_jobs FOREIGN KEY(job_id) REFERENCES jobs(id) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT unq_teacher_job UNIQUE(teacher_id, job_id),
   CONSTRAINT zero_greather_score CHECK(score >= 0),
   CONSTRAINT five_lower_score CHECK(score <= 5)

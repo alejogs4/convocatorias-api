@@ -1,3 +1,10 @@
+export interface Levels {
+  id?: number;
+  text: string;
+}
+
+export type Types = Levels;
+
 export interface Studies {
   id?: number;
   degree: string;
