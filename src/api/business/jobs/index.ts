@@ -18,6 +18,8 @@ const jobValidator = validators.validateRequestSchema([
   'job_type_id',
 ]);
 
+const candidateJobValidator = validators.validateRequestSchema(['job_id']);
+
 jobs.get('/api/v1/jobs', jobsController.getJobOpportunities);
 jobs.get('/api/v1/jobs/types', jobsController.getJobsTypes);
 jobs.post(
@@ -27,5 +29,6 @@ jobs.post(
   validators.validateCurrentUserBePartProgram,
   jobsController.createNewJobOpportunity,
 );
+jobs.post('/api/v1/job/candidate', candidateJobValidator, tokenService.validateToken, jobsController.applyToAJob);
 
 export default jobs;

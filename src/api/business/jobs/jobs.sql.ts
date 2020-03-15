@@ -6,6 +6,9 @@ const JOBS_SQL_QUERIES = {
 `,
   createNewJobProfile: `INSERT INTO profiles(name, description, job_id) VALUES($1, $2, $3) RETURNING *`,
   getJobsTypes: 'SELECT id, text FROM job_types',
+  createJobCandidate: `
+  INSERT INTO candidates(teacher_id, job_id, score) VALUES($1, $2, $3) RETURNING *
+`,
 };
 
 export default JOBS_SQL_QUERIES;

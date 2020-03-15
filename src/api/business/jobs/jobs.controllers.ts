@@ -40,9 +40,22 @@ async function createNewJobOpportunity(req: Request, res: Response): Promise<voi
   }
 }
 
+async function applyToAJob(req: Request, res: Response): Promise<void> {
+  try {
+    const { job_id: jobId } = req.body;
+    const user = tokenService.getUserFromToken(req.headers.authorization as string);
+
+    const jobCandidate = await jobService.createNewJobCandidate(user, jobId);
+    res.status(codes.CREATED).send({ message: 'Aplicacion creada', data: { candidate: jobCandidate } });
+  } catch (error) {
+    res.status(codes.SERVER_ERROR).send({ message: `Error aplicando a la convocatoria ${error.message}` });
+  }
+}
+
 const jobsController = {
-  getJobOpportunities,
+  applyToAJob,
   createNewJobOpportunity,
+  getJobOpportunities,
   getJobsTypes,
 };
 

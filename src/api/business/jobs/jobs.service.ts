@@ -1,11 +1,12 @@
 import { Pool } from 'pg';
-import { Job, User, Profile, Types } from '../types';
+import { Job, User, Profile, Types, JobCandidate } from '../types';
 import JOBS_SQL_QUERIES from './jobs.sql';
 
 interface JobService {
   createNewJob(job: Job, user: User): Promise<Job>;
   getJobOpportunities(): Promise<Job[]>;
   getJobTypes(): Promise<Types[]>;
+  createNewJobCandidate(user: User, jobId: number): Promise<JobCandidate>;
 }
 
 interface JobServiceDependencies {
@@ -43,6 +44,14 @@ function buildJobService({ database }: JobServiceDependencies): JobService {
     async getJobTypes(): Promise<Types[]> {
       const types = (await database.query(JOBS_SQL_QUERIES.getJobsTypes)).rows;
       return types;
+    },
+    async createNewJobCandidate(user: User, jobId: number): Promise<JobCandidate> {
+      const score = 5; // TODO: Calculate real score based on UDEM requirements
+      const jobCandidate = (
+        await database.query<JobCandidate>(JOBS_SQL_QUERIES.createJobCandidate, [user.id, jobId, score])
+      ).rows[0];
+
+      return jobCandidate;
     },
   };
 }

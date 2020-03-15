@@ -17,3 +17,10 @@ export interface Job {
   job_type_id?: number;
   profiles: [Profile];
 }
+
+export interface JobCandidate {
+  id?: number;
+  teacher_id: number;
+  job_id: number;
+  score: number;
+}
