@@ -1,7 +1,7 @@
 // packages
 import { Request, Response } from 'express';
 // scripts
-import { Job, Types } from '../types';
+import { Job, Types, User } from '../types';
 import AppInterface from '../../app';
 import buildJobService from './jobs.service';
 import codes from '../utils/httpCodes';
@@ -52,11 +52,22 @@ async function applyToAJob(req: Request, res: Response): Promise<void> {
   }
 }
 
+async function getJobCandidates(req: Request, res: Response): Promise<void> {
+  try {
+    const { job: jobId } = req.params;
+    const candidates = [] as User[];
+    res.status(codes.OK_REQUEST).send({ message: 'Candidatos conseguidos', data: { candidates } });
+  } catch (error) {
+    res.status(codes.SERVER_ERROR).send({ message: `Error consiguiendo aspirantes ${error.message}` });
+  }
+}
+
 const jobsController = {
   applyToAJob,
   createNewJobOpportunity,
   getJobOpportunities,
   getJobsTypes,
+  getJobCandidates,
 };
 
 export default jobsController;
