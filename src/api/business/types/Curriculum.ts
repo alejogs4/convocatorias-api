@@ -28,6 +28,9 @@ export interface TeachingExperiences {
 export interface Curriculum {
   id?: number;
   dni: string;
+  dni_type: string;
+  professional_card: string;
+  military_card: string;
   gender: string;
   civil_status: string;
   country: string;

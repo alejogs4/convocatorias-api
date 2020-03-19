@@ -4,6 +4,9 @@ import { Curriculum, User, Studies, TeachingExperiences } from '../types';
 
 export const getCurriculumInfoForInsertion = (curriculum: Curriculum, user: User) => [
   curriculum.dni,
+  curriculum.dni_type,
+  curriculum.professional_card,
+  curriculum.military_card,
   curriculum.country,
   curriculum.gender,
   curriculum.birthday,

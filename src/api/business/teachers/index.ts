@@ -14,6 +14,9 @@ const signupRequiredFieldsValidator = validators.validateRequestSchema(['name', 
 const loginRequiredFieldsValidator = validators.validateRequestSchema(['password', 'email']);
 const curriculumRequiredFieldsValidator = validators.validateRequestSchema([
   'dni',
+  'dni_type',
+  'professional_card',
+  'military_card',
   'gender',
   'civil_status',
   'country',

@@ -110,3 +110,7 @@ ALTER TABLE teaching_experiences DROP CONSTRAINT fk_teaching_experiences_curricu
 ALTER TABLE teaching_experiences ADD CONSTRAINT fk_teaching_experiences_curriculum FOREIGN KEY(curriculum_id) REFERENCES curriculum(id) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE curriculum ADD CONSTRAINT uq_curriculum_user UNIQUE(teacher_id);
+-- curriculum new fields
+ALTER TABLE curriculum ADD COLUMN dni_type VARCHAR(30) NOT NULL DEFAULT 'Cedula';
+ALTER TABLE curriculum ADD COLUMN professional_card VARCHAR(50) NOT NULL DEFAULT '';
+ALTER TABLE curriculum ADD COLUMN military_card VARCHAR(50) NOT NULL DEFAULT '';
