@@ -39,6 +39,27 @@ CREATE TABLE profiles(
   CONSTRAINT fk_profiles_jobs FOREIGN KEY(job_id) REFERENCES jobs(id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
+CREATE TABLE requirements(
+  id serial,
+  text text NOT NULL,
+  job_id int,
+  CONSTRAINT pk_requirements PRIMARY KEY(id),
+  CONSTRAINT fk_requirements_jobs FOREIGN KEY(job_id) REFERENCES jobs(id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE stages (
+  id serial,
+  text VARCHAR(200) NOT NULL,
+  initial_date DATE NOT NULL,
+  final_date DATE NOT NULL,
+  stage_order SMALLINT NOT NULL,
+  job_id int,
+  CONSTRAINT pk_stages PRIMARY KEY(id),
+  CONSTRAINT fk_stages_jobs FOREIGN KEY(job_id) REFERENCES jobs(id) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT non_negative_order CHECK(stage_order > 0),
+  CONSTRAINT non_repeated_stage UNIQUE(job_id, stage_order)
+);
+
 CREATE TABLE candidates(
   id serial,
   teacher_id int,
@@ -114,3 +135,7 @@ ALTER TABLE curriculum ADD CONSTRAINT uq_curriculum_user UNIQUE(teacher_id);
 ALTER TABLE curriculum ADD COLUMN dni_type VARCHAR(30) NOT NULL DEFAULT 'Cedula';
 ALTER TABLE curriculum ADD COLUMN professional_card VARCHAR(50) NOT NULL DEFAULT '';
 ALTER TABLE curriculum ADD COLUMN military_card VARCHAR(50) NOT NULL DEFAULT '';
+
+
+ALTER TABLE jobs ADD COLUMN program VARCHAR(150) NOT NULL DEFAULT 'Ingenieria de sistemas';
+ALTER TABLE profiles ADD COLUMN area VARCHAR(150) NOT NULL DEFAULT 'Ingenieria de software';

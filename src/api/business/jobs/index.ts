@@ -11,6 +11,9 @@ const { tokenService, validators } = utils;
 
 const jobValidator = validators.validateRequestSchema([
   'name',
+  'program',
+  'requirements',
+  'stages',
   'description',
   'begin_date',
   'final_date',
