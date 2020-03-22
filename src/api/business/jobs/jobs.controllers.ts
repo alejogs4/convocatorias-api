@@ -18,6 +18,17 @@ async function getJobOpportunities(_: Request, res: Response): Promise<void> {
   }
 }
 
+async function getJobOpportunity(req: Request, res: Response): Promise<void> {
+  try {
+    const { id } = req.params;
+    const jobOpportunity = await jobService.getJobOpportunity(Number(id));
+    res.status(codes.OK_REQUEST).send({ message: `Convocatoria ${id} conseguida`, data: { job: jobOpportunity } });
+  } catch (error) {
+    res.status(codes.SERVER_ERROR).send({ message: `Error consiguiendo convocatoria con id ${error.message}` });
+  }
+  return void null;
+}
+
 async function getJobsTypes(_: Request, res: Response): Promise<void> {
   try {
     const types: Types[] = await jobService.getJobTypes();
@@ -68,6 +79,7 @@ const jobsController = {
   getJobOpportunities,
   getJobsTypes,
   getJobCandidates,
+  getJobOpportunity,
 };
 
 export default jobsController;

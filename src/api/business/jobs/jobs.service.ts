@@ -7,6 +7,7 @@ interface JobService {
   getJobOpportunities(): Promise<Job[]>;
   getJobTypes(): Promise<Types[]>;
   createNewJobCandidate(user: User, jobId: number): Promise<JobCandidate>;
+  getJobOpportunity(id: number): Promise<Job>;
 }
 
 interface JobServiceDependencies {
@@ -63,6 +64,41 @@ function buildJobService({ database }: JobServiceDependencies): JobService {
     async getJobOpportunities(): Promise<Job[]> {
       const jobs = (await database.query<Job>(JOBS_SQL_QUERIES.getJobsOpportunities)).rows;
       return jobs;
+    },
+    async getJobOpportunity(id: number): Promise<Job> {
+      const job = (
+        await database.query<Job>(
+          `
+      SELECT id, name, description, program, begin_date, final_date, is_close, open_teacher_id, job_type_id
+      FROM jobs
+      WHERE id=$1
+      `,
+          [id],
+        )
+      ).rows[0];
+
+      if (!job) {
+        throw new Error('No existe esta convocatoria');
+      }
+
+      const requirements = database.query<Requirements>('SELECT id, text, job_id FROM requirements WHERE job_id = $1', [
+        job.id,
+      ]);
+      const profiles = database.query<Profile>('SELECT id, name, description, job_id FROM profiles WHERE job_id = $1', [
+        job.id,
+      ]);
+      const stages = database.query<Stages>(
+        'SELECT id, text, initial_date, final_date, stage_order, job_id FROM stages WHERE job_id = $1 ORDER BY stage_order ASC',
+        [job.id],
+      );
+
+      const results = await Promise.all([requirements, profiles, stages]);
+      return {
+        ...job,
+        requirements: results[0].rows,
+        profiles: results[1].rows,
+        stages: results[2].rows,
+      } as Job;
     },
     async getJobTypes(): Promise<Types[]> {
       const types = (await database.query(JOBS_SQL_QUERIES.getJobsTypes)).rows;
