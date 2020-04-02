@@ -53,10 +53,10 @@ async function createNewJobOpportunity(req: Request, res: Response): Promise<voi
 
 async function applyToAJob(req: Request, res: Response): Promise<void> {
   try {
-    const { job_id: jobId } = req.body;
+    const { job_id: jobId, profiles } = req.body;
     const user = tokenService.getUserFromToken(req.headers.authorization as string);
 
-    const jobCandidate = await jobService.createNewJobCandidate(user, jobId);
+    const jobCandidate = await jobService.createNewJobCandidate(user, jobId, profiles as number[]);
     res.status(codes.CREATED).send({ message: 'Aplicacion creada', data: { candidate: jobCandidate } });
   } catch (error) {
     res.status(codes.SERVER_ERROR).send({ message: `Error aplicando a la convocatoria ${error.message}` });
@@ -66,7 +66,7 @@ async function applyToAJob(req: Request, res: Response): Promise<void> {
 async function getJobCandidates(req: Request, res: Response): Promise<void> {
   try {
     const { job: jobId } = req.params;
-    const candidates = [] as User[];
+    const candidates = await jobService.getJobCandidates(Number(jobId));
     res.status(codes.OK_REQUEST).send({ message: 'Candidatos conseguidos', data: { candidates } });
   } catch (error) {
     res.status(codes.SERVER_ERROR).send({ message: `Error consiguiendo aspirantes ${error.message}` });

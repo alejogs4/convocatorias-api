@@ -73,6 +73,15 @@ CREATE TABLE candidates(
   CONSTRAINT five_lower_score CHECK(score <= 5)
 );
 
+CREATE TABLE candidates_profiles(
+  id serial,
+  candidate_id integer,
+  profile_id integer,
+  CONSTRAINT pk_candidates_profiles PRIMARY KEY(id),
+  CONSTRAINT fk_candidates_profiles_candidates FOREIGN KEY(candidate_id) REFERENCES candidates(id) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT fk_candidates_profiles_profiles FOREIGN KEY(profile_id) REFERENCES profiles(id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
 CREATE TABLE curriculum(
   id serial,
   dni VARCHAR(40) NOT NULL,

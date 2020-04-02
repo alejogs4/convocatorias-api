@@ -21,7 +21,7 @@ const jobValidator = validators.validateRequestSchema([
   'job_type_id',
 ]);
 
-const candidateJobValidator = validators.validateRequestSchema(['job_id']);
+const candidateJobValidator = validators.validateRequestSchema(['job_id', 'profiles']);
 
 jobs.get('/api/v1/jobs', jobsController.getJobOpportunities);
 jobs.get('/api/v1/jobs/types', jobsController.getJobsTypes);

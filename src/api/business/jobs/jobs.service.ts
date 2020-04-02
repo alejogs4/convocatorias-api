@@ -6,8 +6,9 @@ interface JobService {
   createNewJob(job: Job, user: User): Promise<Job>;
   getJobOpportunities(): Promise<Job[]>;
   getJobTypes(): Promise<Types[]>;
-  createNewJobCandidate(user: User, jobId: number): Promise<JobCandidate>;
+  createNewJobCandidate(user: User, jobId: number, profiles: number[]): Promise<JobCandidate>;
   getJobOpportunity(id: number): Promise<Job>;
+  getJobCandidates(jobId: number): Promise<Array<User>>;
 }
 
 interface JobServiceDependencies {
@@ -104,13 +105,36 @@ function buildJobService({ database }: JobServiceDependencies): JobService {
       const types = (await database.query(JOBS_SQL_QUERIES.getJobsTypes)).rows;
       return types;
     },
-    async createNewJobCandidate(user: User, jobId: number): Promise<JobCandidate> {
+    async createNewJobCandidate(user: User, jobId: number, profiles: number[]): Promise<JobCandidate> {
       const score = 5; // TODO: Calculate real score based on UDEM requirements
       const jobCandidate = (
         await database.query<JobCandidate>(JOBS_SQL_QUERIES.createJobCandidate, [user.id, jobId, score])
       ).rows[0];
 
+      await Promise.all(
+        profiles.map(profileId =>
+          database.query('INSERT INTO candidates_profiles(candidate_id, profile_id) VALUES($1, $2)', [
+            jobCandidate.id,
+            profileId,
+          ]),
+        ),
+      );
+
       return jobCandidate;
+    },
+    async getJobCandidates(jobId: number): Promise<Array<User>> {
+      const users = await database.query<User>(
+        `
+        SELECT
+        u.id, u.lastname, u.email, u.is_boss, u.is_program, u.id
+        FROM teachers u
+        INNER JOIN candidates c
+        ON c.teacher_id = u.id
+        WHERE c.job_id = $1;
+      `,
+        [jobId],
+      );
+      return users.rows;
     },
   };
 }
