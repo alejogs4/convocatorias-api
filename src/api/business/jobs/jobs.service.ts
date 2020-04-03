@@ -85,9 +85,10 @@ function buildJobService({ database }: JobServiceDependencies): JobService {
       const requirements = database.query<Requirements>('SELECT id, text, job_id FROM requirements WHERE job_id = $1', [
         job.id,
       ]);
-      const profiles = database.query<Profile>('SELECT id, name, description, job_id FROM profiles WHERE job_id = $1', [
-        job.id,
-      ]);
+      const profiles = database.query<Profile>(
+        'SELECT id, name, description, job_id, area FROM profiles WHERE job_id = $1',
+        [job.id],
+      );
       const stages = database.query<Stages>(
         'SELECT id, text, initial_date, final_date, stage_order, job_id FROM stages WHERE job_id = $1 ORDER BY stage_order ASC',
         [job.id],
@@ -126,7 +127,7 @@ function buildJobService({ database }: JobServiceDependencies): JobService {
       const users = await database.query<User>(
         `
         SELECT
-        u.id, u.lastname, u.email, u.is_boss, u.is_program, u.id
+        u.id, u.name, u.lastname, u.email, u.is_boss, u.is_program, u.id
         FROM teachers u
         INNER JOIN candidates c
         ON c.teacher_id = u.id
