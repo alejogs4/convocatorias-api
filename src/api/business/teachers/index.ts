@@ -41,5 +41,11 @@ teachers.post(
 
 teachers.get('/api/v1/teacher/curriculum', tokenService.validateToken, teacherControllers.getTeacherCurriculum);
 teachers.get('/api/v1/teacher/levels', teacherControllers.getTeacherLevels);
+teachers.get(
+  '/api/v1/candidates/:id/curriculum',
+  tokenService.validateToken,
+  validators.validateCurrentUserBePartProgram,
+  teacherControllers.getTeacherCurriculumById,
+);
 
 export default teachers;

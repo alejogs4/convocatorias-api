@@ -126,8 +126,7 @@ function buildJobService({ database }: JobServiceDependencies): JobService {
     async getJobCandidates(jobId: number): Promise<Array<User>> {
       const users = await database.query<User>(
         `
-        SELECT
-        u.id, u.name, u.lastname, u.email, u.is_boss, u.is_program, u.id
+        SELECT u.id, u.name, u.lastname, u.email, u.is_boss, u.is_program, u.id
         FROM teachers u
         INNER JOIN candidates c
         ON c.teacher_id = u.id

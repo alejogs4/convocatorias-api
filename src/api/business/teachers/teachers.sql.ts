@@ -1,6 +1,7 @@
 const TEACHER_SQL_QUERIES = {
   signupTeacher: 'INSERT INTO teachers(name, lastname, password, email) VALUES($1, $2, $3, $4) returning *',
   loginTeacher: 'SELECT id, name, lastname, email, is_boss, is_program FROM teachers WHERE email=$1 AND password=$2',
+  getTeacher: 'SELECT id, name, lastname, email, is_boss, is_program FROM teachers WHERE id=$1;',
   addCurriculum: `INSERT INTO curriculum(dni, dni_type, professional_card, military_card, country, gender, birthday, hometown, civil_status, personal_address, home_phone, cellphone_phone, teacher_id)
   VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
   RETURNING *

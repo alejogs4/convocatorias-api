@@ -59,6 +59,16 @@ async function getTeacherCurriculum(req: Request, res: Response): Promise<void> 
   }
 }
 
+async function getTeacherCurriculumById(req: Request, res: Response): Promise<void> {
+  try {
+    const user: User = await userService.getTeacherById(Number(req.params.id));
+    const curriculum: Curriculum = await userService.getTeacherCurriculum(user);
+    res.status(httpCodes.OK_REQUEST).send({ message: 'Hoja de vida conseguida', data: { curriculum } });
+  } catch (error) {
+    res.status(httpCodes.SERVER_ERROR).send({ message: `Error consiguiendo hoja de vida ${error.message}` });
+  }
+}
+
 async function getTeacherLevels(_: Request, res: Response): Promise<void> {
   try {
     const levels: Levels[] = await userService.getTeacherLevels();
@@ -74,6 +84,7 @@ const teacherControllers = {
   createTeacherCurriculum,
   getTeacherCurriculum,
   getTeacherLevels,
+  getTeacherCurriculumById,
 };
 
 export default teacherControllers;

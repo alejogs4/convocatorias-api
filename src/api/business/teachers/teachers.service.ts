@@ -23,6 +23,7 @@ interface TeacherService {
   registerTeacherCurriculum(curriculum: Curriculum, user: User): Promise<Curriculum>;
   getTeacherCurriculum(user: User): Promise<Curriculum>;
   getTeacherLevels(): Promise<Levels[]>;
+  getTeacherById(id: number): Promise<User>;
 }
 
 function buildTeacherService(dependencies: TeacherServiceDependencies): TeacherService {
@@ -40,6 +41,14 @@ function buildTeacherService(dependencies: TeacherServiceDependencies): TeacherS
       ]);
 
       return user.rows[0] as User;
+    },
+    async getTeacherById(id: number): Promise<User> {
+      const teacher = await dependencies.database.query(TEACHER_SQL_QUERIES.getTeacher, [id]);
+      if (!teacher.rows[0]) {
+        throw new Error("This user doesn't exists");
+      }
+
+      return teacher.rows[0] as User;
     },
     async loginUser(email: string, password: string): Promise<User> {
       const storedPassword = crypto.createHmac('sha256', password).digest('hex');

@@ -113,7 +113,8 @@ CREATE TABLE studies(
   title_level_id INTEGER,
   curriculum_id INTEGER,
   CONSTRAINT pk_studies PRIMARY KEY(id),
-  CONSTRAINT fk_studies_title_levels FOREIGN KEY(title_level_id) REFERENCES title_levels(id),
+  CONSTRAINT fk_studies_title_levels FOREIGN KEY(title_level_id) REFERENCES title_levels(id)
+  ,
   CONSTRAINT fk_studies_curriculum FOREIGN KEY(curriculum_id) REFERENCES curriculum(id)
 );
 
