@@ -16,7 +16,7 @@ const TEACHER_SQL_QUERIES = {
  `,
   getCurriculumByUser: `
  SELECT
- id, dni, gender, civil_status, country, birthday, hometown, personal_address, home_phone, cellphone_phone
+ id, dni, gender, civil_status, country, birthday, hometown, personal_address, home_phone, cellphone_phone, dni_type, professional_card, military_card
  FROM curriculum
  WHERE teacher_id=$1;
 `,
