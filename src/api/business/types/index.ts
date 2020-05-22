@@ -1,5 +1,5 @@
 import { Curriculum, TeachingExperiences, Studies, Levels, Types } from './Curriculum';
-import { User } from './User';
+import { User, UpdateUser } from './User';
 import { Job, Profile, JobCandidate, Requirements, Stages } from './Job';
 
 export {
@@ -14,4 +14,5 @@ export {
   JobCandidate,
   Requirements,
   Stages,
+  UpdateUser,
 };

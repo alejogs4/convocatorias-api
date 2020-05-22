@@ -4,7 +4,7 @@ import { Pool } from 'pg';
 import crypto from 'crypto';
 
 // scripts
-import { Curriculum, User, Studies, TeachingExperiences, Levels } from '../types';
+import { Curriculum, User, Studies, TeachingExperiences, Levels, UpdateUser } from '../types';
 import TEACHER_SQL_QUERIES from './teachers.sql';
 import {
   getCurriculumInfoForInsertion,
@@ -20,6 +20,7 @@ interface TeacherServiceDependencies {
 interface TeacherService {
   registerUser(incommingUser: User): Promise<User>;
   loginUser(email: string, password: string): Promise<User>;
+  updateTeacher(user: UpdateUser, currentUser: User): Promise<User>;
   registerTeacherCurriculum(curriculum: Curriculum, user: User): Promise<Curriculum>;
   getTeacherCurriculum(user: User): Promise<Curriculum>;
   getTeacherLevels(): Promise<Levels[]>;
@@ -41,6 +42,25 @@ function buildTeacherService(dependencies: TeacherServiceDependencies): TeacherS
       ]);
 
       return user.rows[0] as User;
+    },
+    async updateTeacher(user: UpdateUser, currentUser: User): Promise<User> {
+      const passwordQuery = user.password ? ',password=$4' : '';
+      const fieldsToUpdate = user.password
+        ? [user.name, user.lastname, user.email]
+        : [user.name, user.lastname, user.email, crypto.createHmac('sha256', user.password).digest('hex')];
+      const [updatedUser] = (
+        await dependencies.database.query(
+          `
+        UPDATE teachers
+        SET name=$1, lastname=$2, email=$3${passwordQuery}
+        WHERE id = ${currentUser.id}
+        RETURNING *
+      `,
+          fieldsToUpdate,
+        )
+      ).rows;
+
+      return updatedUser as User;
     },
     async getTeacherById(id: number): Promise<User> {
       const teacher = await dependencies.database.query(TEACHER_SQL_QUERIES.getTeacher, [id]);

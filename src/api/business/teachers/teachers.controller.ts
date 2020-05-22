@@ -5,7 +5,7 @@ import { Request, Response } from 'express';
 import utils from '../utils';
 import buildTeacherService from './teachers.service';
 import AppInterface from '../../app';
-import { Curriculum, User, Levels } from '../types';
+import { Curriculum, User, Levels, UpdateUser } from '../types';
 
 // constants
 const { httpCodes, tokenService } = utils;
@@ -33,6 +33,18 @@ async function login(req: Request, res: Response): Promise<void> {
     res.status(httpCodes.OK_REQUEST).send({ message: 'Succesful login', data: { user, token } });
   } catch (error) {
     res.status(httpCodes.SERVER_ERROR).send({ message: `Error in user signup ${error.message}` });
+  }
+}
+
+async function updateTeacher(req: Request, res: Response): Promise<void> {
+  try {
+    const user = req.body as UpdateUser;
+    const currentUser: User = tokenService.getUserFromToken(req.headers.authorization as string);
+    const updatedUser = await userService.updateTeacher(user, currentUser);
+
+    res.status(httpCodes.CREATED).send({ message: 'Update fine', data: { user: updatedUser } });
+  } catch (error) {
+    res.status(httpCodes.SERVER_ERROR).send({ message: `Error in user update ${error.message}` });
   }
 }
 
@@ -85,6 +97,7 @@ const teacherControllers = {
   getTeacherCurriculum,
   getTeacherLevels,
   getTeacherCurriculumById,
+  updateTeacher,
 };
 
 export default teacherControllers;

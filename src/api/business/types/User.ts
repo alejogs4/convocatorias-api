@@ -8,3 +8,10 @@ export interface User {
   is_program?: boolean;
   id: number;
 }
+
+export interface UpdateUser {
+  name: string;
+  email: string;
+  lastname: string;
+  password: string;
+}
