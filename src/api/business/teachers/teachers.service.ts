@@ -45,22 +45,30 @@ function buildTeacherService(dependencies: TeacherServiceDependencies): TeacherS
       return user.rows[0] as User;
     },
     async updateTeacher(user: UpdateUser, currentUser: User): Promise<User> {
-      const passwordQuery = user.password ? ',password=$4' : '';
+      const passwordQuery = user.password ? ',password=$5' : '';
       const fieldsToUpdate = user.password
-        ? [user.name, user.lastname, user.email]
-        : [user.name, user.lastname, user.email, crypto.createHmac('sha256', user.password).digest('hex')];
+        ? [
+            user.name,
+            user.lastname,
+            user.email,
+            currentUser.id,
+            crypto.createHmac('sha256', user.password).digest('hex'),
+          ]
+        : [user.name, user.lastname, user.email, currentUser.id];
+
       const [updatedUser] = (
         await dependencies.database.query(
           `
         UPDATE teachers
         SET name=$1, lastname=$2, email=$3${passwordQuery}
-        WHERE id = ${currentUser.id}
+        WHERE id = $4
         RETURNING *
       `,
           fieldsToUpdate,
         )
       ).rows;
 
+      delete updatedUser.password;
       return updatedUser as User;
     },
     async getTeacherById(id: number): Promise<User> {
