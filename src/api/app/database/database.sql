@@ -145,7 +145,7 @@ ALTER TABLE curriculum ADD CONSTRAINT uq_curriculum_user UNIQUE(teacher_id);
 ALTER TABLE curriculum ADD COLUMN dni_type VARCHAR(30) NOT NULL DEFAULT 'Cedula';
 ALTER TABLE curriculum ADD COLUMN professional_card VARCHAR(50) NOT NULL DEFAULT '';
 ALTER TABLE curriculum ADD COLUMN military_card VARCHAR(50) NOT NULL DEFAULT '';
-
+ALTER TABLE curriculum ADD COLUMN curriculum_file VARCHAR(1000) DEFAULT '';
 
 ALTER TABLE jobs ADD COLUMN program VARCHAR(150) NOT NULL DEFAULT 'Ingenieria de sistemas';
 ALTER TABLE profiles ADD COLUMN area VARCHAR(150) NOT NULL DEFAULT 'Ingenieria de software';

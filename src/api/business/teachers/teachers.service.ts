@@ -22,6 +22,7 @@ interface TeacherService {
   loginUser(email: string, password: string): Promise<User>;
   updateTeacher(user: UpdateUser, currentUser: User): Promise<User>;
   registerTeacherCurriculum(curriculum: Curriculum, user: User): Promise<Curriculum>;
+  registerTeacherCurriculumFile(file: string, user: User): Promise<string>;
   getTeacherCurriculum(user: User): Promise<Curriculum>;
   getTeacherLevels(): Promise<Levels[]>;
   getTeacherById(id: number): Promise<User>;
@@ -106,6 +107,20 @@ function buildTeacherService(dependencies: TeacherServiceDependencies): TeacherS
       );
 
       return { ...storedCurriculum.rows[0], studies, teachingExperiences } as Curriculum;
+    },
+    async registerTeacherCurriculumFile(file: string, user: User): Promise<string> {
+      setImmediate(() =>
+        dependencies.database.query(
+          `
+      UPDATE curriculum
+      SET curriculum_file=$1
+      WHERE teacher_id = $2
+      RETURNING *
+      `,
+          [file, user.id],
+        ),
+      );
+      return file;
     },
     async getTeacherCurriculum(user: User): Promise<Curriculum> {
       const curriculumResults = await dependencies.database.query(TEACHER_SQL_QUERIES.getCurriculumByUser, [user.id]);

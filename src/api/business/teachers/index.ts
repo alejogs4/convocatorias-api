@@ -29,6 +29,7 @@ const curriculumRequiredFieldsValidator = validators.validateRequestSchema([
   'studies',
   'teaching_experiences',
 ]);
+const curriculumFileValidator = validators.validateRequestSchema(['file']);
 
 // routes
 teachers.post('/api/v1/signup', signupRequiredFieldsValidator, teacherControllers.signupUser);
@@ -38,6 +39,13 @@ teachers.post(
   curriculumRequiredFieldsValidator,
   tokenService.validateToken,
   teacherControllers.createTeacherCurriculum,
+);
+
+teachers.post(
+  '/api/v1/curriculum/file',
+  curriculumFileValidator,
+  tokenService.validateToken,
+  teacherControllers.saveUserFile,
 );
 
 teachers.get('/api/v1/teacher/curriculum', tokenService.validateToken, teacherControllers.getTeacherCurriculum);

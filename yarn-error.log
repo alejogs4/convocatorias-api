@@ -1,0 +1,78 @@
+Arguments: 
+  C:\Program Files\nodejs\node.exe C:\Users\alejo\AppData\Roaming\npm\node_modules\yarn\bin\yarn.js start:dev
+
+PATH: 
+  C:\Program Files\Git\mingw64\bin;C:\Program Files\Git\usr\bin;C:\Users\alejo\bin;C:\Python27;C:\Program Files (x86)\Common Files\Oracle\Java\javapath;C:\ProgramData\Oracle\Java\javapath;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0;C:\WINDOWS\System32\OpenSSH;C:\Program Files\dotnet;C:\Program Files\Microsoft SQL Server\130\Tools\Binn;C:\Program Files\Microsoft VS Code\bin;C:\ProgramData\chocolatey\bin;C:\Users\alejo\AppData\Roaming\nvm;C:\Program Files\nodejs;C:\Go\bin;C:\Users\alejo\AppData\Local\Programs\Python\Python38-32\Scripts;C:\Users\alejo\AppData\Local\Programs\Python\Python38-32;C:\Program Files\MongoDB\Server\3.6\bin;C:\Users\alejo\.cargo\bin;C:\Users\alejo\AppData\Local\Programs\Python\Python37-32\Scripts;C:\Users\alejo\AppData\Local\Programs\Python\Python37-32;C:\Users\alejo\AppData\Local\Microsoft\WindowsApps;C:\Program Files\Microsoft VS Code\bin;C:\Users\alejo\AppData\Roaming\Dashlane\6.0.2.11187\bin\Firefox_Extension\{442718d9-475e-452a-b3e1-fb1ee16b8e9f}\components;C:\Users\alejo\AppData\Roaming\Dashlane\6.0.2.11187\ucrt;C:\Users\alejo\AppData\Roaming\Dashlane\6.0.2.11187\bin\Qt;C:\Users\alejo\AppData\Roaming\Dashlane\6.0.2.11187\ucrt;C:\Users\alejo\AppData\Roaming\Dashlane\6.0.2.11187\bin\Ssl;C:\Users\alejo\AppData\Roaming\npm;C:\Users\alejo\AppData\Roaming\nvm;C:\Program Files\nodejs;C:\Users\alejo\go\bin;C:\Program Files\JetBrains\PyCharm Community Edition 2019.1.1\bin;C:\Users\alejo\AppData\Local\hyper\app-3.0.0\resources\bin;C:\Python27
+
+Yarn version: 
+  1.5.1
+
+Node version: 
+  10.16.3
+
+Platform: 
+  win32 x64
+
+npm manifest: 
+  {
+    "name": "convocatorias-api",
+    "version": "1.0.0",
+    "description": "Sistema de convocatorias del programa de ingenieria de sistemas universidad de medellin",
+    "main": "package.json",
+    "scripts": {
+      "test": "echo \"Error: no test specified\" && exit 1",
+      "start:dev": "nodemon",
+      "build": "rimraf ./build && tsc",
+      "start": "npm run build && node build/index.js"
+    },
+    "keywords": [
+      "udem",
+      "node",
+      "javascript"
+    ],
+    "author": "Alejandro Garcia Serna <alejogs4@gmail.com>",
+    "license": "MIT",
+    "devDependencies": {
+      "@types/node": "^13.7.1",
+      "@typescript-eslint/eslint-plugin": "^2.19.2",
+      "@typescript-eslint/parser": "^2.19.2",
+      "eslint": "^6.8.0",
+      "eslint-config-prettier": "^6.10.0",
+      "eslint-plugin-prettier": "^3.1.2",
+      "nodemon": "^2.0.2",
+      "prettier": "^1.19.1",
+      "ts-node": "^8.6.2",
+      "typescript": "^3.7.5"
+    },
+    "dependencies": {
+      "@types/dotenv": "^8.2.0",
+      "@types/express": "^4.17.2",
+      "@types/jsonwebtoken": "^8.3.7",
+      "@types/pg": "^7.14.1",
+      "dotenv": "^8.2.0",
+      "express": "^4.17.1",
+      "jsonwebtoken": "^8.5.1",
+      "pg": "^7.18.2"
+    }
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile
+
+Trace: 
+  Error: Command failed.
+  Exit code: 3221225786
+  Command: C:\WINDOWS\system32\cmd.exe
+  Arguments: /d /s /c nodemon
+  Directory: C:\Users\alejo\OneDrive\Documents\github\alejogs4\convocatorias\convocatorias-api
+  Output:
+  
+      at ProcessTermError.MessageError (C:\Users\alejo\AppData\Roaming\npm\node_modules\yarn\lib\cli.js:186:110)
+      at new ProcessTermError (C:\Users\alejo\AppData\Roaming\npm\node_modules\yarn\lib\cli.js:226:113)
+      at ChildProcess.<anonymous> (C:\Users\alejo\AppData\Roaming\npm\node_modules\yarn\lib\cli.js:30281:17)
+      at ChildProcess.emit (events.js:198:13)
+      at maybeClose (internal/child_process.js:982:16)
+      at Process.ChildProcess._handle.onexit (internal/child_process.js:259:5)

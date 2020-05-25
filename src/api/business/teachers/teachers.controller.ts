@@ -60,6 +60,18 @@ async function createTeacherCurriculum(req: Request, res: Response): Promise<voi
   }
 }
 
+async function saveUserFile(req: Request, res: Response): Promise<void> {
+  try {
+    const user: User = tokenService.getUserFromToken(req.headers.authorization as string);
+    const { file } = req.body;
+    const fileUrl = await userService.registerTeacherCurriculumFile(file, user);
+
+    res.status(httpCodes.CREATED).send({ message: 'Archivo guardado', data: { curriculum: fileUrl } });
+  } catch (error) {
+    res.status(httpCodes.SERVER_ERROR).send({ message: `Error registrando archivo ${error.message}` });
+  }
+}
+
 async function getTeacherCurriculum(req: Request, res: Response): Promise<void> {
   try {
     const user: User = tokenService.getUserFromToken(req.headers.authorization as string);
@@ -98,6 +110,7 @@ const teacherControllers = {
   getTeacherLevels,
   getTeacherCurriculumById,
   updateTeacher,
+  saveUserFile,
 };
 
 export default teacherControllers;
