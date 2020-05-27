@@ -15,7 +15,7 @@ export interface Validators {
 function validateRequestSchema(requiredFields: string[]): RequestHandler {
   return function executeSchemaValidation(req: Request, res: Response, next: NextFunction): void {
     const bodyFields: string[] = Object.keys(req.body);
-    const allRequiredFieldArePresent = bodyFields.every(field => requiredFields.includes(field));
+    const allRequiredFieldArePresent = requiredFields.every(field => bodyFields.includes(field));
 
     if (!allRequiredFieldArePresent) {
       res.status(codes.BAD_REQUEST).send({ message: `Fields ${requiredFields.join(',')} are required` });

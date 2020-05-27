@@ -45,6 +45,23 @@ function buildTeacherService(dependencies: TeacherServiceDependencies): TeacherS
       return user.rows[0] as User;
     },
     async updateTeacher(user: UpdateUser, currentUser: User): Promise<User> {
+      if ((user.oldPassword && !user.password) || (!user.oldPassword && user.password)) {
+        throw new Error('Both must be present');
+      }
+
+      if (user.oldPassword && user.password) {
+        const lastpass = crypto.createHmac('sha256', user.oldPassword).digest('hex');
+        const [userWithGivenPassword] = (
+          await dependencies.database.query(
+            `
+        SELECT password from teachers WHERE id=$1 AND password=$2`,
+            [currentUser.id, lastpass],
+          )
+        ).rows;
+
+        if (!userWithGivenPassword) throw new Error('Old password is not correct');
+      }
+
       const passwordQuery = user.password ? ',password=$5' : '';
       const fieldsToUpdate = user.password
         ? [

@@ -14,4 +14,5 @@ export interface UpdateUser {
   email: string;
   lastname: string;
   password: string;
+  oldPassword: string;
 }

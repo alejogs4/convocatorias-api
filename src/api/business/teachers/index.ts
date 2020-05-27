@@ -12,7 +12,13 @@ const teachers = Router();
 // validators
 const signupRequiredFieldsValidator = validators.validateRequestSchema(['name', 'lastname', 'password', 'email']);
 const loginRequiredFieldsValidator = validators.validateRequestSchema(['password', 'email']);
-const updateTeacherValidator = validators.validateRequestSchema(['name', 'lastname', 'email', 'password']);
+const updateTeacherValidator = validators.validateRequestSchema([
+  'name',
+  'lastname',
+  'email',
+  'password',
+  'oldPassword',
+]);
 const curriculumRequiredFieldsValidator = validators.validateRequestSchema([
   'dni',
   'dni_type',
